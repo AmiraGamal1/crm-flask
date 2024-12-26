@@ -1,0 +1,31 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+auth/
+
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+
+venv/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Flask files
+instance/
+.flaskenv
+
+# Environment variables
+*.env
+
+# VS Code
+.vscode/
+
+# Temporary files
+tmp/
+temp/
