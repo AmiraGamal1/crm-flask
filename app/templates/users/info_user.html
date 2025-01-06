@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>CRM</title>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="info">
+        <div class="table_box">
+            <table>
+                <tr>
+                    <th>User</th>
+                    <td>{{ user.user_name }}</td>
+                </tr>
+                <tr>
+                    <th>User email</th>
+                    <td>{{ user.user_email }}</td>
+                </tr>
+                <tr>
+                    <th>User phone</th>
+                    <td>{{ user.user_phone }}</td>
+                </tr>
+                <tr>
+                    <th>Privilage</th>
+                    <td>{{ user.roles[0].name }}</td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <td>{{ user.date.date() }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="edit">
+            {% if current_user.has_role('admin') or current_user.has_role('editor')%}
+            <a href="/update_user/{{user.id}}" id="update">Update</a>
+            <br/>
+            <a href="{{ url_for('delete_user', id=user.id) }}" onclick="return confirm('are you sure you want delete this record?!')" id="delete">Delete</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

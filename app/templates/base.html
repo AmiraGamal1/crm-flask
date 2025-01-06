@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        {% block navbar %} 
+        <div class='topnav'> 
+            <a href="{{ url_for('main.index') }}">FlaskApp</a>
+            <a class='active' href="sales/view_sale.html">Sales</a>
+            <a href="products/view_product.html">Products</a>
+            <a href="customers/view_customer.html">Customers</a> 
+            {% if current_user.has_role('admin') or current_user.has_role('supervisor') %}
+            <a href="users/view_user.html">Users</a> {% endif %}
+            <a class='logout' href="logout">Logout</a> </div> 
+        {% endblock %}
+        <div class="content">
+            {% block content %} 
+            <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+            {% endblock %}
+        </div>
+    </body>
+</html>

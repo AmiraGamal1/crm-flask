@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>CRM</title>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class='search'>
+        <form action="{{ url_for('search_product', search='') }}" method="get">
+            <input type='text' placeholder='Search' name='search' id='search'>
+            <input type='submit' value="Search">
+        </form>
+    </div>
+    <!--navigation through the records-->
+    <div class="view">
+        <h1 style="text-align: center;">Products information</h1>
+        {% if products|length < 1 %}
+        <h4  style="text-align: center;"> There are no product on the store, create one below!</h4>
+        {% else %}
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Date</th>
+                <th>Id</th>
+            </tr>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.product_name }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.product_quantity }}</td>
+                    <td>{{ product.date.date() }}</td>
+                    <td><a href="/info_product/{{ product.id }}">{{ product.id }}</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

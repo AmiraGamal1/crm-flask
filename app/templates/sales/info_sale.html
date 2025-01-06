@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>CRM</title>
+{% endblock %}
+
+<div class="content">
+{% block content %}
+<div class="content">
+    <div class="info">
+        <div class="table_box">
+            <table>
+                <tr>
+                    <th>Product</th>
+                    <td>{{ sale.product_name }}</td>
+                </tr>
+                <tr>
+                    <th>Quantity</th>
+                    <td>{{ sale.product_quantity }}</td>
+                </tr>
+                <tr>
+                    <th>Customer name</th>
+                    <td>{{ sale.customer_name }}</td>
+                </tr>
+                <tr>
+                    <th>Customer email</th>
+                    <td>{{ sale.customer_email }}</td>
+                </tr>
+                <tr>
+                    <th>Customer phone</th>
+                    <td>{{ sale.customer_phone }}</td>
+                </tr>
+                <tr>
+                    <th>User</th>
+                    <td>{{ sale.user_name }}</td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <td>{{ sale.date.date() }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="edit">
+            {% if current_user.has_role('admin') or current_user.has_role('editor')%}
+            <a href="/update_sale/{{sale.id}}" id="update">Update</a>
+            <br>
+            <a href="{{ url_for('delete_sale', id=sale.id) }}" onclick="return confirm('are you sure you want delete this record?!')" id="delete">Delete</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

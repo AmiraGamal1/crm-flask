@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>CRM</title>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="add_update">
+        <div class="form-box">
+            <h1  style="text-align: center;">Update product information</h1>
+            <form action="/update_product/{{product.id}}" method="post">
+                <div class="input-group">
+                    <label>Product</label>
+                    <div class="input-field">
+                        <input type="text" name="product" id="product" value="{{ product.product_name }}" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Price</label>
+                    <div class="input-field">
+                        <input type="text" name="price" id="price" value="{{ product.price }}" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Quantity</label>
+                    <div class="input-field">
+                        <input type="number" name="quantity" id="quantity" value="{{ product.product_quantity }}" required>
+                    </div>
+                </div>
+                <div class="input-field">
+                    {% if current_user.has_role('admin') or current_user.has_role('editor')%}
+                    <input type="submit" value="Update" name="update" id="update">
+                    {% endif %}
+                </div> 
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
