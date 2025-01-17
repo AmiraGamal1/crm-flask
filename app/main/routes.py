@@ -5,10 +5,12 @@ from app.models.product import Product
 from app.models.customer import Customer
 from app.models.user import User
 from flask_login import login_required
+from flask_security import roles_accepted
 
 
 @bp.route('/',methods=['GET'])
 @login_required
+@roles_accepted('admin', 'editor', 'supervisor')
 def index():
     user_count = User.query.count()
     customer_count = Customer.query.count()

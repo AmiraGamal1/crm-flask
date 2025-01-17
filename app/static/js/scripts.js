@@ -1,18 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('downloadBtn').addEventListener('click', function() {
-    document.getElementById('dropdown').classList.toggle('show');
+        document.getElementById('dropdown').classList.toggle('show');
 });
 
-function downloadFile(format, table) {
-    console.log(`Fetching /download_${table}?format=${format}`);
-    
+function downloadFile(format, table){
+    console.log(`Fetching /${table}/download_${table}?format=${format}`);
     fetch(`/${table}/download_${table}?format=${format}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.blob();
-        })
+        .then(response => response.blob())
         .then(blob => {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -22,20 +16,19 @@ function downloadFile(format, table) {
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
-            a.remove(); // Remove the anchor element after the download
         })
         .catch(error => console.error(`Error downloading ${format.toUpperCase()}:`, error));
 }
 
-// Attach event listeners to elements with the "download-link" class
-document.querySelectorAll('.download-link').forEach(function (element) {
-    element.addEventListener('click', function (event) {
+document.querySelectorAll('.download-link').forEach(function(element) {
+    element.addEventListener('click', function(event) {
         event.preventDefault();
-        const format = this.getAttribute('data-format'); // Get the format from data attribute
-        const table = this.getAttribute('data-table');   // Get the table from data attribute
-        downloadFile(format, table); // Call the downloadFile function
+        const format = this.getAttribute('data-format');
+        const table = this.getAttribute('data-table');
+        downloadFile(format, table);
     });
-})
+});
+
 
 document.getElementById('openModalBtn').onclick = function() {
     document.getElementById('uploadModal').style.display = 'block';

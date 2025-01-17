@@ -19,7 +19,8 @@
     <input type="hidden" id="userCount" value="{{ data.user_count }}">
     
 </div>
-
+{% endblock %}
+{% block scripts %}
 <script>
     // Wait until DOM is fully loaded
     document.addEventListener("DOMContentLoaded", function () {
@@ -66,7 +67,15 @@
                 },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) {
+                                if (Number.isInteger(value)) {
+                                    return value;
+                                }
+                            }
+                        }
                     }
                 }
             }
