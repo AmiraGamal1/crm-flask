@@ -34,7 +34,7 @@
                         <td>{{ sale.customer_phone }}</td>
                         <td>{{ sale.user_name }}</td>
                         <td>{{ sale.date.date() }}</td>
-                        <td><a href="sales/info_sale/{{ sale.id }}">{{ sale.id }}</a></td>
+                        <td><a href="/sales/info_sale/{{ sale.id }}">{{ sale.id }}</a></td>
                     </tr>
                 {% endfor %}
             </table>
@@ -51,6 +51,7 @@
                         <a href="#" class="download-link" data-table="sales" data-format="csv">CSV</a>
                     </div>
                 </div>
+                {% block scripts %}{% endblock %}
                 <div class="upload-container">
                     <button id="openModalBtn">Upload</button>
                     <div id="uploadModal" class="modal">
