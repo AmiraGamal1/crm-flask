@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="content">
+        <div class='search'>
+            <form action="{{ url_for('sales.search_sale', search='') }}" method="get">
+                <input type='text' placeholder='Search' name='search' id='search'>
+                <input type='submit' value="Search">
+            </form>
+        </div>
+        <!--navigation through the records-->
+        <div class="view">
+            <h1 style="text-align: center;">Sales information</h1>
+            {% if sales|length < 1 %}
+            <h4  style="text-align: center;"> There are no sale, create one below!</h4>
+            {% else %}
+            <table>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Customer name</th>
+                    <th>Customer email</th>
+                    <th>Customer phone</th>
+                    <th>User</th>
+                    <th>Date</th>
+                    <th>Id</th>
+                </tr>
+                {% for sale in sales %}
+                    <tr>
+                        <td>{{ sale.product_name }}</td>
+                        <td>{{ sale.product_quantity }}</td>
+                        <td>{{ sale.customer_name }}</td>
+                        <td>{{ sale.customer_email }}</td>
+                        <td>{{ sale.customer_phone }}</td>
+                        <td>{{ sale.user_name }}</td>
+                        <td>{{ sale.date.date() }}</td>
+                        <td><a href="sales/info_sale/{{ sale.id }}">{{ sale.id }}</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
+        </div>
+        <body>
+            <div class="add">
+                {% if current_user.has_role('admin') or current_user.has_role('editor')%}
+                <a href="{{ url_for('sales.add_sale', search='') }}">Add Sale</a>
+                <div class="download-container">
+                    <button id="downloadBtn">Download</button>
+                    <div id="dropdown" class="dropdown-content">
+                        <a href="#" class="download-link" data-table="sales" data-format="json">JSON</a>
+                        <a href="#" class="download-link" data-table="sales" data-format="csv">CSV</a>
+                    </div>
+                </div>
+                <div class="upload-container">
+                    <button id="openModalBtn">Upload</button>
+                    <div id="uploadModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <form id="uploadForm">
+                                <input type="file" id="fileInput" name="file">
+                                <button type="submit">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div id="popup" class="popup"></div>
+            </div>
+        </body>
+    </div>
+    {% endblock %}

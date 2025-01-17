@@ -1,45 +1,19 @@
 from flask import render_template
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, login_required
 from flask_security import Security, SQLAlchemySessionUserDatastore, roles_accepted
 from app.users import bp
-from app import bcrypt, login_manager
-from app.extensions import db
+from app.extensions import db, bcrypt
 
 
-from app.models.user import User, Role, get_user, create_roles
+from app.models.user import User, Role, get_user
 
-
-@login_manager.user_loader
-def load_user(user_id):
-  return User.query.get(user_id)
-
-@bp.route('/', methods=['GET', 'POST'])
-def  login():
-  if request.method == 'POST':
-    user_email = request.form['email']
-    password = request.form['password']
-    user = User.query.filter_by(user_email=user_email).first()
-
-    if user and bcrypt.check_password_hash(user.password, password):
-        login_user(user)
-        return redirect('users/view_sale')
-    else:
-        return "login error"
-  return render_template('users/login.html')
-
-@bp.route('/logout')
-@login_required
-def  logout():
-    logout_user()
-    return redirect('/')
-
-@bp.route('/view_user/', methods=['GET'])
+@bp.route('/', methods=['GET'])
 @roles_accepted('admin', 'supervisor')
-def view_user():
+def index():
     """view user table"""
     users = User.query.order_by(User.user_name).all()
-    return render_template('users/view_user.html', users=users)
+    return render_template('users/index.html', users=users)
 
 @bp.route('/search_user/', methods=['GET', 'POST'])
 @roles_accepted('admin','supervisor')
@@ -67,7 +41,7 @@ def add_user():
         try:
             db.session.add(new_user)
             db.session.commit()
-            return redirect('users/view_user')
+            return redirect(url_for("users.index"))
         except:
             return 'There was an error adding user'
     else:
@@ -89,7 +63,7 @@ def delete_user(id):
     try:
         db.session.delete(user_to_delete)
         db.session.commit()
-        return redirect('users/view_user')
+        return redirect(url_for("users.index"))
     except:
         return 'delete error'
 
@@ -106,7 +80,7 @@ def update_user(id):
 
         try:
             db.session.commit()
-            return redirect('users/view_user')
+            return redirect(url_for("users.index"))
         except:
             return 'db update error'
 

@@ -9,7 +9,7 @@
     <div class="add_update">
         <div class="form-box">
             <h1  style="text-align: center;">Update sale information</h1>
-            <form action="/update_sale/{{sale.id}}" method="post">
+            <form action="/sales/update_sale/{{sale.id}}" method="post">
                 <div class="input-group">
                     <label>Product</label>
                     <div class="input-field {% if error == 'Product not found' %}error-field{% endif %}">

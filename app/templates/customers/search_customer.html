@@ -7,7 +7,7 @@
 {% block content %}
 <div class="content">
     <div class='search'>
-        <form action="{{ url_for('search_customer', search='') }}" method="get">
+        <form action="{{ url_for('customers.search_customer', search='') }}" method="get">
             <input type='text' placeholder='Search' name='search' id='search'>
             <input type='submit' value="Search">
         </form>

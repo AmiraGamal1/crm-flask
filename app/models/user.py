@@ -4,6 +4,7 @@ import pytz
 from flask_security import UserMixin, RoleMixin
 import uuid
 import secrets
+from sqlalchemy.orm import aliased
 
 
 fs_uniquifier_value = str(uuid.uuid4())
@@ -56,9 +57,10 @@ def create_roles():
 
 def get_user(search):
     search_pattern = f"%{search}"
+    RoleAlias = aliased(Role)
     results = User.query.filter(
         (User.id.like(search_pattern)) | (User.user_name.like(search_pattern))
         | (User.user_email.like(search_pattern)) | (User.user_phone.like(search_pattern))
-        | (User.type.like(search_pattern)) | (User.date.like(search_pattern))
+        | (RoleAlias.name.like(search_pattern)) | (User.date.like(search_pattern))
     ).all()
     return results

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    
+</div>
+<div class="container-dashboard">
+    <h1>Dashboard</h1>
+    <canvas id="myChart" style="width: 200px !important; height: 80px !important;"></canvas>
+    
+    <!-- Pass data using hidden inputs -->
+    <input type="hidden" id="saleCount" value="{{ data.sale_count }}">
+    <input type="hidden" id="customerCount" value="{{ data.customer_count }}">
+    <input type="hidden" id="productCount" value="{{ data.product_count }}">
+    <input type="hidden" id="userCount" value="{{ data.user_count }}">
+    
+</div>
+
+<script>
+    // Wait until DOM is fully loaded
+    document.addEventListener("DOMContentLoaded", function () {
+        // Retrieve data from hidden inputs
+        const saleCount = parseInt(document.getElementById("saleCount").value);
+        const customerCount = parseInt(document.getElementById("customerCount").value);
+        const productCount = parseInt(document.getElementById("productCount").value);
+        const userCount = parseInt(document.getElementById("userCount").value);
+
+        // Prepare chart data
+        const labels = ["Sales", "Customers", "Products", "Users"];
+        const data = [saleCount, customerCount, productCount, userCount];
+
+        // Create the chart
+        const ctx = document.getElementById("myChart").getContext("2d");
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Count",
+                    data: data,
+                    backgroundColor: [
+                        "rgba(255,99,132,0.2)",
+                        "rgba(54,162,235,0.2)",
+                        "rgba(255,206,86,0.2)",
+                        "rgba(75,192,192,0.2)"
+                    ],
+                    borderColor: [
+                        "rgba(255,99,132,1)",
+                        "rgba(54,162,235,1)",
+                        "rgba(255,206,86,1)",
+                        "rgba(75,192,192,1)"
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: "top",
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

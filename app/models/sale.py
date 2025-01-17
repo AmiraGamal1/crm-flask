@@ -5,7 +5,7 @@ import pytz
 
 class Sale(db.Model):
     """Sale table"""
-    __tablename__ = 'sale'
+    __tablename__ = 'sales'
     id = db.Column(db.Integer, primary_key=True)
     product_name = db.Column(db.String(200), nullable=False)
     product_quantity = db.Column(db.Integer, nullable=False)
@@ -26,3 +26,4 @@ def get_sales(search):
         | (Sale.user_name.like(search_pattern)) | (Sale.date.like(search_pattern))
     ).all()
     return results
+

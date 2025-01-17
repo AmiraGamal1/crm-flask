@@ -7,7 +7,7 @@
 {% block content %}
 <div class="content">
     <div class='search'>
-        <form action="{{ url_for('search_product', search='') }}" method="get">
+        <form action="{{ url_for('products.search_product', search='') }}" method="get">
             <input type='text' placeholder='Search' name='search' id='search'>
             <input type='submit' value="Search">
         </form>
@@ -32,7 +32,7 @@
                     <td>{{ product.price }}</td>
                     <td>{{ product.product_quantity }}</td>
                     <td>{{ product.date.date() }}</td>
-                    <td><a href="/info_product/{{ product.id }}">{{ product.id }}</a></td>
+                    <td><a href="/products/info_product/{{ product.id }}">{{ product.id }}</a></td>
                 </tr>
             {% endfor %}
         </table>

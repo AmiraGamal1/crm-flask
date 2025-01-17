@@ -1,13 +1,9 @@
 {% extends 'base.html' %}
 
-{% block head %}
-<title>CRM</title>
-{% endblock %}
-
 {% block content %}
 <div class="content">
     <div class='search'>
-        <form action="{{ url_for('search_user', search='') }}" method="get">
+        <form action="{{ url_for('users.search_user', search='') }}" method="get">
             <input type='text' placeholder='Search' name='search' id='search'>
             <input type='submit' value="Search">
         </form>
@@ -34,7 +30,7 @@
                     <td>{{ user.user_phone }}</td>
                     <td>{{ user.roles[0].name }}</td>
                     <td>{{ user.date.date() }}</td>
-                    <td><a href="/info_user/{{ user.id }}">{{ user.id }}</a></td>
+                    <td><a href="/users/info_user/{{ user.id }}">{{ user.id }}</a></td>
                 </tr>
             {% endfor %}
         </table>
@@ -42,7 +38,7 @@
     </div>
     <div class="add">
         {% if current_user.has_role('admin') or current_user.has_role('editor')%}
-        <a href="/add_user">Add user</a>
+        <a href="/users/add_user">Add user</a>
         {% endif %}
     </div>
 </div>

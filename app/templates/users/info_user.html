@@ -33,9 +33,9 @@
         </div>
         <div class="edit">
             {% if current_user.has_role('admin') or current_user.has_role('editor')%}
-            <a href="/update_user/{{user.id}}" id="update">Update</a>
+            <a href="/users/update_user/{{user.id}}" id="update">Update</a>
             <br/>
-            <a href="{{ url_for('delete_user', id=user.id) }}" onclick="return confirm('are you sure you want delete this record?!')" id="delete">Delete</a>
+            <a href="{{ url_for('users.delete_user', id=user.id) }}" onclick="return confirm('are you sure you want delete this record?!')" id="delete">Delete</a>
             {% endif %}
         </div>
     </div>
