@@ -8,10 +8,20 @@ from flask_login import login_required
 from flask_security import roles_accepted
 
 
-@bp.route('/',methods=['GET'])
+@bp.route('/', methods=['GET'])
 @login_required
 @roles_accepted('admin', 'editor', 'supervisor')
 def index():
+    """ Display the main dashboard with various counts.
+
+    Methods:
+        GET: Retrieve and display counts for users, customers,
+        products, and sales.
+
+    Returns:
+        Template: Render the main/index.html template with the counts
+        data.
+    """
     user_count = User.query.count()
     customer_count = Customer.query.count()
     product_count = Product.query.count()

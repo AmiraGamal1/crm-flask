@@ -1,5 +1,6 @@
 from flask import Blueprint
 
+
 bp = Blueprint('products', __name__)
 
 

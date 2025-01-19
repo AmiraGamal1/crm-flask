@@ -4,7 +4,15 @@ from app.extensions import db
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from app.extensions import login_manager, bcrypt
 
+
 def create_app(config_class=Config):
+    """ Factory function to create a Flask application instance.
+
+    Parameters:
+        config_class: The configuration class to use.
+
+    Returns: app: The Flask application instance.
+    """
     app = Flask(__name__)
     app.config.from_object(config_class)
     app.config['SECRET_KEY'] = 'amira'
@@ -17,7 +25,6 @@ def create_app(config_class=Config):
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    
     from app.models.user import User, Role, create_roles
     create_roles()
     datastore = SQLAlchemySessionUserDatastore(db.session, User, Role)
@@ -26,7 +33,7 @@ def create_app(config_class=Config):
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(user_id)
-    
+
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
 
@@ -47,6 +54,7 @@ def create_app(config_class=Config):
     app.register_blueprint(customers_bp, url_prefix='/customers')
 
     return app
+
 
 if __name__ == '__main__':
     app = create_app()

@@ -1,4 +1,5 @@
-from flask import render_template, request, redirect, url_for, Response, get_flashed_messages
+from flask import (render_template, request, redirect, url_for,
+                   Response, get_flashed_messages)
 from flask_security import roles_accepted
 from app.sales import bp
 from app.extensions import db
@@ -9,10 +10,10 @@ import os
 from werkzeug.utils import secure_filename
 from sqlalchemy import inspect
 from flask import jsonify
-
 from app.models.sale import Sale, get_sales
 from app.import_export.export_sale import export_sale_json
-from app.import_export.import_sale import allowed_file, parse_sales_json_file, parse_sales_csv_file
+from app.import_export.import_sale import (allowed_file, parse_sales_json_file,
+                                           parse_sales_csv_file)
 from app.models.product import Product
 from app.models.customer import add_customer
 
@@ -20,13 +21,31 @@ from app.models.customer import add_customer
 @bp.route('/', methods=['GET'])
 @roles_accepted('admin', 'editor', 'supervisor')
 def index():
-    """view Sale table"""
+    """ Display the list of sales.
+
+    Methods:
+        GET: Retrieve and display all sale records, ordered by date in
+        descending order.
+
+    Returns: Template: Render the sales/index.html template with sale
+    data.
+    """
     sales = Sale.query.order_by(Sale.date.desc()).all()
     return render_template('sales/index.html', sales=sales)
+
 
 @bp.route('/search_sale/', methods=['GET', 'POST'])
 @roles_accepted('admin', 'editor', 'supervisor')
 def search_sale():
+    """ Search for sales based on a search string.
+
+    Methods:
+        GET/POST: Retrieve and display sale records that match the
+        search criteria.
+
+    Returns: Template: Render the sales/search_sale.html template
+    with search results.
+    """
     search = request.args.get('search', '')
     sales = get_sales(search)
     return render_template('sales/search_sale.html', sales=sales)
@@ -35,7 +54,16 @@ def search_sale():
 @bp.route('/add_sale/', methods=['POST', 'GET'])
 @roles_accepted('admin', 'editor')
 def add_sale():
-    """add new sale"""
+    """ Add a new sale.
+
+    Methods:
+        GET: Render the add sale template.
+        POST: Add a new sale to the database.
+
+    Returns:
+        Template or redirect: Render the add sale template or
+        redirect to the sales index.
+    """
     if request.method == 'POST':
         error = ""
         product = request.form['product']
@@ -79,7 +107,14 @@ def add_sale():
 @bp.route('/info_sale/<int:id>', methods=['GET'])
 @roles_accepted('admin', 'editor', 'supervisor')
 def info_sale(id):
-    """view single sale information"""
+    """ Display information about a single sale.
+
+    Methods:
+        GET: Retrieve and display information about a specific sale.
+
+    Returns:
+        Template: Render the sales/info_sale.html template with sale data.
+    """
     sale = Sale.query.get_or_404(id)
     return render_template('sales/info_sale.html', sale=sale)
 
@@ -87,7 +122,14 @@ def info_sale(id):
 @bp.route('/delete_sale/<int:id>')
 @roles_accepted('admin', 'editor')
 def delete_sale(id):
-    """delete single sale"""
+    """ Delete a single sale.
+
+    Methods:
+        GET: Delete a specific sale from the database.
+
+    Returns:
+        Redirect: Redirect to the sales index after deletion.
+    """
     sale_to_delete = Sale.query.get_or_404(id)
 
     try:
@@ -97,9 +139,20 @@ def delete_sale(id):
     except:
         return 'delete error'
 
+
 @bp.route('/update_sale/<int:id>', methods=['GET', 'POST'])
 @roles_accepted('admin', 'editor')
 def update_sale(id):
+    """ Update information about a single sale.
+
+    Methods:
+        GET: Render the update sale template with the current sale data.
+        POST: Update the sale information in the database.
+
+    Returns:
+        Template or redirect: Render the update sale template or
+        redirect to the sales index.
+    """
     sale = Sale.query.get_or_404(id)
     if request.method == 'POST':
         product = request.form['product']
@@ -122,13 +175,23 @@ def update_sale(id):
                     return 'db update error'
         else:
             error = 'Product not found'
-        return render_template('sales/update_sale.html', sale=sale, error=error)
+        return render_template('sales/update_sale.html', sale=sale,
+                               error=error)
     else:
         return render_template('sales/update_sale.html', sale=sale)
+
 
 @bp.route('/download_sales')
 @roles_accepted('admin')
 def download_sales():
+    """ Download sale data in the specified format (CSV or JSON).
+
+    Methods:
+        GET: Retrieve sale data and export it in the specified format.
+
+    Returns: Response: A response containing the sale data file for
+    download.
+    """
     format = request.args.get('format')
     sales_dict = export_sale_json()
 
@@ -140,18 +203,29 @@ def download_sales():
             writer.writerow(row.values())
         output.seek(0)
         response = Response(output, mimetype='test/csv')
-        response.headers['Content-Disposition'] = 'attachment; filename=sales.csv'
+        response.headers['Content-Disposition'] = 'attachment; \
+            filename=sales.csv'
     elif format == 'json':
         json_data = json.dumps(sales_dict, indent=4)
         response = Response(json_data, mimetype='application/json')
-        response.headers['Content-Disposition'] = 'attachment; filename=sales.json'
+        response.headers['Content-Disposition'] = 'attachment; \
+            filename=sales.json'
     else:
         return "Invalid format", 400
     return response
 
+
 @bp.route('/upload_sales', methods=['POST', 'GET'])
 @roles_accepted('admin', 'editor')
 def upload_sales():
+    """ Upload sale data from a file (CSV or JSON).
+
+    Methods: GET: Render the upload sale template.
+    POST: Handle the file upload and import sale data.
+
+    Returns: Template or JSON response: Render the upload sale template
+    or return a JSON response indicating the result of the operation.
+    """
     if request.method == 'POST':
         if 'file' not in request.files:
             return jsonify({"error": "No file part"}), 400
@@ -178,4 +252,3 @@ def upload_sales():
         else:
             return jsonify({"error": "File not allowed"}), 400
     return render_template('upload_sales')
-
